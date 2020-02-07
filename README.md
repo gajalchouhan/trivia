@@ -1,3 +1,4 @@
+locally this will work on this url http://localhost:4200/trivia/question.
 # Weinvest
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.3.4.
