@@ -24,4 +24,10 @@
         margin-bottom: 2rem;
         cursor: pointer;
     }
+
+    .ansbox:active{
+      background-color: lightgreen;
+      color : black;
+    }
 }
+

@@ -21,6 +21,11 @@ export class QuestionComponent implements OnInit {
   constructor(private triviaserv: TriviaService) { }
 
 
+  shuffle(array) {
+    array.sort(() => Math.random() - 0.5);
+    return array
+  }
+
   public modifyData(data) {
     this.correctAnswer = data.map(item => item.correct_answer);
     
@@ -31,6 +36,12 @@ export class QuestionComponent implements OnInit {
       }
     })
 
+    this.questions.forEach(element => {
+       element.mcq = this.shuffle(element.mcq);
+    });
+
+    console.log(this.questions);
+    
     this.showQuestion = this.questions[0];
     this.currentIndex = 1;
   }
@@ -46,6 +57,7 @@ export class QuestionComponent implements OnInit {
     }
   }
 
+  // Calculate a result 
   public getResult(ans){
     for(let i=0; i<this.questions.length; i++){
       console.log(ans[i] , this.correctAnswer[i]);
@@ -55,6 +67,7 @@ export class QuestionComponent implements OnInit {
     }
   }
 
+  // fetch data from api.
   public fetch_data() {
     this.triviaserv.getQuestionData().subscribe(
       res => {
