@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { TriviaService } from '../trivia.service';
+import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 declare var $:any;
 
 @Component({
@@ -14,9 +15,10 @@ export class QuestionComponent implements OnInit {
   public correctAnswer: any;
   public showQuestion: any = {question : '' , mcq :['']};
   public currentIndex: number;
-  public resultCount:number = 0
+  public resultCount:number = 0;
   public allAns:any = [];
   public Rounds:number = 0;
+  public showResult:boolean = false;
 
   constructor(private triviaserv: TriviaService) { }
 
@@ -40,31 +42,38 @@ export class QuestionComponent implements OnInit {
        element.mcq = this.shuffle(element.mcq);
     });
 
-    console.log(this.questions);
-    
     this.showQuestion = this.questions[0];
-    this.currentIndex = 1;
+    this.currentIndex = 0;
   }
 
-  public checkUserAns(ans){    
+  public checkUserAns(ans){ 
+    this.currentIndex++;   
+    if(this.currentIndex <= this.questions.length-1){
      this.allAns.push(ans);
-     this.currentIndex++;
-     this.showQuestion = this.questions[this.currentIndex-1];
-
-    if(this.currentIndex-1 === this.questions.length){
-      $("#modalBox").click();
-      this.getResult(this.allAns);
+     this.showQuestion = this.questions[this.currentIndex];
     }
+    else{ 
+        this.currentIndex = this.questions.length - 1;
+        this.allAns.push(ans);
+        this.getResult(this.allAns);
+    }
+    
   }
 
   // Calculate a result 
   public getResult(ans){
+    this.resultCount = 0;
     for(let i=0; i<this.questions.length; i++){
-      console.log(ans[i] , this.correctAnswer[i]);
       if(ans[i] === this.correctAnswer[i]){
-        this.resultCount++;
+        this.resultCount = this.resultCount + 1;
       }
     }
+    
+    this.currentIndex = 0;
+    this.showQuestion = [];
+    this.allAns = [];
+    this.correctAnswer = [];
+    $("#modalBox").click();
   }
 
   // fetch data from api.
